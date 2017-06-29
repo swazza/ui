@@ -9,7 +9,17 @@ let devEntries = [
   "webpack/hot/only-dev-server"
 ];
 
-let vendorEntries = ["react", "react-dom"];
+let vendorEntries = [
+  "react",
+  "react-dom",
+  "react-router",
+  "react-router-dom",
+  "history",
+  "redux",
+  "react-redux",
+  "react-router-redux",
+  "redux-saga"
+];
 
 let appEntries = [path.resolve(__dirname, "../src/client", "index.js")];
 
