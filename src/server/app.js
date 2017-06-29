@@ -23,6 +23,8 @@ export const renderApp = (html, req, res) => {
   getDataFromTree(app).then(() => {
     let appString = renderToString(app);
     let preloadedState = store.getState();
+    let { data } = client.getInitialState();
+    preloadedState.apollo.data = data;
     let renderedApp = html
       .replace("<!--ssr-->", appString)
       .replace("$ssrState", JSON.stringify(preloadedState).replace(/</g, "\\u003c"));
