@@ -14,8 +14,7 @@ fetch("http://localhost:24000/index.html")
   .then(html => {
     app.get("*", (req, res) => {
       let renderedApp = renderApp(html, req.url);
-      html = html.replace("<!--ssr-->", renderedApp);
-      res.status(200).send(html);
+      res.status(200).send(renderedApp);
     });
 
     app.listen(3000, () => {
