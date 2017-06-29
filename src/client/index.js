@@ -2,30 +2,29 @@ import React from "react";
 import { render } from "react-dom";
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
-import {
-  ConnectedRouter as Router,
-  routerReducer,
-  routerMiddleware,
-  push
-} from "react-router-redux";
+import { ConnectedRouter as Router, routerReducer, routerMiddleware, push } from "react-router-redux";
 import createHistory from "history/createBrowserHistory";
+import { ApolloClient, ApolloProvider, createNetworkInterface } from "react-apollo";
 import { App } from "common/App";
 
-const history = createHistory(),
-  middleware = routerMiddleware(history),
+const networkInterface = createNetworkInterface({ uri: "http://localhost:4000/graphql" }),
+  client = new ApolloClient({ networkInterface }),
+  history = createHistory(),
+  reactRouterMiddleware = routerMiddleware(history),
+  apolloMiddleware = client.middleware(),
   composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose,
   store = createStore(
-    combineReducers({ router: routerReducer }),
-    composeEnhancers(applyMiddleware(middleware))
+    combineReducers({ router: routerReducer, apollo: client.reducer() }),
+    composeEnhancers(applyMiddleware(reactRouterMiddleware, apolloMiddleware))
   );
 
 const renderApp = () =>
   render(
-    <Provider store={store}>
+    <ApolloProvider store={store} client={client}>
       <Router history={history}>
         <App />
       </Router>
-    </Provider>,
+    </ApolloProvider>,
     document.querySelector("#mount")
   );
 
